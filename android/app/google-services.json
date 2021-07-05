@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "433961195599",
+    "project_id": "vsj-firebase-demo",
+    "storage_bucket": "vsj-firebase-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433961195599:android:73e21e23100950ee6a323a",
+        "android_client_info": {
+          "package_name": "com.varanasisoftwarejunction.cloud.firebasedemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433961195599-qip096jle0f62sj5ev5jl656cj57phgk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeucO7jBCso5Fs-Rv6FywFHZh4grUVaH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433961195599-qip096jle0f62sj5ev5jl656cj57phgk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
