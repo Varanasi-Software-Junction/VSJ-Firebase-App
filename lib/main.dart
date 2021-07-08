@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/';
 
 void main() {
   runApp(FirebaseDemo());
+
 }
 
 class FirebaseDemo extends StatefulWidget {
@@ -68,7 +70,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                     style: TextStyle(backgroundColor: Colors.teal),
                   ),
                   onPressed: () async {
-                    dynamic _auth;
+                    FirebaseAuth _auth;
                     try {
                       print("Pressed");
                       try {
@@ -80,12 +82,17 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                       }
                       try {
                         _auth = FirebaseAuth.instance;
+
                       } catch (e1) {}
+
                        dynamic result= await _auth.createUserWithEmailAndPassword(email: username, password: password);
                       status=result.toString();
+User newuser=result;
+
                       print(status);
                     } catch (e) {
                       status = e.toString();
+
                       print(status);
                     }
                     setState(() {});
