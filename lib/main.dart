@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   runApp(FirebaseDemo());
@@ -11,6 +11,7 @@ void main() {
 class FirebaseDemo extends StatefulWidget {
   @override
   _FirebaseDemoState createState() => _FirebaseDemoState();
+
 }
 
 class _FirebaseDemoState extends State<FirebaseDemo> {
@@ -85,11 +86,17 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
 
                       } catch (e1) {}
 
-                       dynamic result= await _auth.createUserWithEmailAndPassword(email: username, password: password);
-                      status=result.toString();
-User newuser=result;
+                      // dynamic result= await _auth.createUserWithEmailAndPassword(email: username, password: password);
+                      //status=result.toString();
+//User newuser=result;
+                      FirebaseFirestore _firestoredb=FirebaseFirestore.instance;
+                      _firestoredb.collection("messages").add(
+                          {
+                            "chatmessage":"Hello champak",
+                            "messagefrom":"chmpaksworld@gmail.com"
 
-                      print(status);
+                          });
+                     // print(status);
                     } catch (e) {
                       status = e.toString();
 
