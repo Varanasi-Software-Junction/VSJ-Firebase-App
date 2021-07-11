@@ -78,10 +78,8 @@ setState(() {
         print(value.get("messagefrom"));
       }
     });
+    print(firebasedata);
 
-    setState(() {
-
-    });
     }
 
   @override
@@ -100,7 +98,7 @@ setState(() {
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                child:Text(firebasedata),
+                child:Text(firebasedata + "data"),
                 ),
               ),
 
@@ -184,10 +182,11 @@ print("Send");
               }, child: Text("Send Message",style: TextStyle(backgroundColor: Colors.teal),)),
              ElevatedButton(onPressed: ()async{
                print("Get Messages");
+               //await firebaseInit();
              // getMessages();
               await getMessagesStream();
               
-             }, child:Text("Get")),
+             }, child:Text("Get Message",style: TextStyle(backgroundColor: Colors.teal),)),
             ],
           ),
         ),
