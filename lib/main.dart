@@ -179,14 +179,17 @@ print("Send");
                             "messagefrom":"chmpaksworld@gmail.com"
 
                           });
-              }, child: Text("Send Message",style: TextStyle(backgroundColor: Colors.teal),)),
+              }, child: Text("Send Message Stream",style: TextStyle(backgroundColor: Colors.teal),)),
              ElevatedButton(onPressed: ()async{
                print("Get Messages");
                //await firebaseInit();
-             // getMessages();
+             //await getMessages();
               await getMessagesStream();
               
-             }, child:Text("Get Message",style: TextStyle(backgroundColor: Colors.teal),)),
+             }, child:Text("Get Message Stream",style: TextStyle(backgroundColor: Colors.teal),)
+             )
+              ,
+              Text("Hello"),
             ],
           ),
         ),
