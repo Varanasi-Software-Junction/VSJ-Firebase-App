@@ -6,19 +6,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
-  Firebase.initializeApp();
+  //Firebase.initializeApp();
   runApp(FirebaseDemo());
 
 }
 
 class FirebaseDemo extends StatefulWidget {
+  FirebaseFirestore firestoredb;//=FirebaseFirestore.instance;
   @override
   _FirebaseDemoState createState() => _FirebaseDemoState();
 
 }
 
 class _FirebaseDemoState extends State<FirebaseDemo> {
-  FirebaseFirestore _firestoredb=null;
+
   String username = "", password = "", status = "Messages";
 
   @override
@@ -30,6 +31,7 @@ void firebaseInit()
 {
   try {
     Firebase.initializeApp().whenComplete(() {
+      widget.firestoredb=FirebaseFirestore.instance;
       print("Initialized");
     });
   } catch (ee) {
@@ -37,7 +39,7 @@ void firebaseInit()
   }
 }
   _FirebaseDemoState() {
-  _firestoredb=  FirebaseFirestore.instance;
+  //_firestoredb=  FirebaseFirestore.instance;
   }
   String firebasedata="data";
   void getMessages()
@@ -88,6 +90,7 @@ setState(() {
 
   @override
   Widget build(BuildContext context) {
+    //firebaseInit();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -191,33 +194,61 @@ print("Send");
               await getMessagesStream();
               
              }, child:Text("Get Message Stream",style: TextStyle(backgroundColor: Colors.teal),)
-             )
-              ,
-            StreamBuilder<QuerySnapshot>(
-              stream:_firestoredb.collection("messages").snapshots() ,
-              builder: (context,snapshot){
-                if(snapshot.hasData)
-                  {
-                    final messages=snapshot.data.docs;
-                    List<Text> lst =[];
-                    for( var message in messages)
-                      {
-                        final messagetext=message.get("chatmessage");
-                        final sender=message.get("messagefrom");
-                        final messagetextfield=Text(messagetext + " : " + sender);
-                        lst.add(messagetext);
+             ),
+
+
+
+
+
+
+
+
+
+              StreamBuilder<QuerySnapshot>(
+                stream:widget.firestoredb.collection("messages").snapshots() ,
+                builder: (context,snapshot){
+                  try {
+                    if (snapshot.hasData) {
+                      final messages = snapshot.data.docs;
+                      List<Text> lst = [];
+                      for (var message in messages) {
+                        final messagetext = message.get("chatmessage");
+                        final sender = message.get("messagefrom");
+                        final messagetextfield = Text(
+                            messagetext.toString() + " : " + sender.toString(),
+                        style: TextStyle(backgroundColor: Colors.pinkAccent),);
+                        lst.add(messagetextfield);
+
                       }
-                    return Column(
-                      children:lst,
-                    );
+                      return Column(
+                        children: lst,
+                      );
+                    }
+                    else {
+                      List<Text> lst = [];
+                      lst.add(Text("Waiting"));
+                      return Column(
+                      children:  lst,
+                      );
+                    }
                   }
-                else
+                  catch(e)
                   {
-                    return Text("Waiting");
+                    List<Text> lst = [];
+                    lst.add(Text("Erromr" + e.toString()));
+                    return Column( children:lst,);
                   }
-              },
-            )
-              ,
+                },
+              ),
+
+
+
+
+
+
+
+
+
             ],
           ),
         ),
