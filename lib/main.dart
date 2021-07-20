@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
+  Firebase.initializeApp();
   runApp(FirebaseDemo());
 
 }
@@ -17,6 +18,7 @@ class FirebaseDemo extends StatefulWidget {
 }
 
 class _FirebaseDemoState extends State<FirebaseDemo> {
+  FirebaseFirestore _firestoredb=null;
   String username = "", password = "", status = "Messages";
 
   @override
@@ -34,7 +36,9 @@ void firebaseInit()
     print(ee);
   }
 }
-  _FirebaseDemoState() {}
+  _FirebaseDemoState() {
+  _firestoredb=  FirebaseFirestore.instance;
+  }
   String firebasedata="data";
   void getMessages()
  async {
@@ -189,7 +193,31 @@ print("Send");
              }, child:Text("Get Message Stream",style: TextStyle(backgroundColor: Colors.teal),)
              )
               ,
-              Text("Hello"),
+            StreamBuilder<QuerySnapshot>(
+              stream:_firestoredb.collection("messages").snapshots() ,
+              builder: (context,snapshot){
+                if(snapshot.hasData)
+                  {
+                    final messages=snapshot.data.docs;
+                    List<Text> lst =[];
+                    for( var message in messages)
+                      {
+                        final messagetext=message.get("chatmessage");
+                        final sender=message.get("messagefrom");
+                        final messagetextfield=Text(messagetext + " : " + sender);
+                        lst.add(messagetext);
+                      }
+                    return Column(
+                      children:lst,
+                    );
+                  }
+                else
+                  {
+                    return Text("Waiting");
+                  }
+              },
+            )
+              ,
             ],
           ),
         ),
