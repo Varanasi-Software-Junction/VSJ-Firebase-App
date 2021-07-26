@@ -7,12 +7,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
-  while(true)
+  //while(true)
     {
  try {
    WidgetsFlutterBinding.ensureInitialized();
    await Firebase.initializeApp();
-   break;
  }
  catch(e) {}
   }
@@ -26,7 +25,8 @@ class FirebaseDemo extends StatefulWidget {
 }
 
 class _FirebaseDemoState extends State<FirebaseDemo> {
-  String username = "", password = "", status = "Messages";
+  String username = "", chatmessage = "", status = "Messages";
+  TextEditingController textcontroller=TextEditingController();
 
   @override
   void initState() {
@@ -154,17 +154,26 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
-
+controller:textcontroller,
                   textAlign: TextAlign.center,
 decoration: VsjTwo.myInputDecoration(),
                   onChanged: (value) {
-                    password = value;
-                    print(password);
+                    chatmessage = value;
+                    print(chatmessage);
                   },
                 ),
               ),
 
-ElevatedButton(onPressed: (){}, child: Text("Send"))
+ElevatedButton(onPressed: ()async{
+  await     FirebaseDemo.firestoredb.collection("messages").add(
+      {
+        "chatmessage":chatmessage,
+        "messagefrom":username,
+
+      });
+  textcontroller.clear();
+
+}, child: Text("Send"))
 
             ],
           ),
