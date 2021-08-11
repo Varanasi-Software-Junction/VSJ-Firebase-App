@@ -101,7 +101,8 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseDemo.firestoredb
-                    .collection("messages")
+                    //.collection("messages").where("messagefrom", isEqualTo: "champak").orderBy("messagefrom")
+                    .collection("messages").where("messagefrom", isEqualTo: "champak")
                     .snapshots(),
                 builder: (context, snapshot) {
                   try {
