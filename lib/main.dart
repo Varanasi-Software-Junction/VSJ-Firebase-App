@@ -101,8 +101,8 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseDemo.firestoredb
-                    //.collection("messages").where("messagefrom", isEqualTo: "champak").orderBy("messagefrom")
-                    .collection("messages").where("messagefrom", isEqualTo: "champak")
+                    .collection("messages").where("messagefrom", isEqualTo: "champak").orderBy("time")
+                    //.collection("messages").where("messagefrom", isEqualTo: "champak")
                     .snapshots(),
                 builder: (context, snapshot) {
                   try {
@@ -170,7 +170,7 @@ ElevatedButton(onPressed: ()async{
       {
         "chatmessage":chatmessage,
         "messagefrom":username,
-
+        "time":DateTime.now().millisecondsSinceEpoch,
       });
   textcontroller.clear();
 
