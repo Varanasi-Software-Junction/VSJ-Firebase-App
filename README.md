@@ -174,7 +174,13 @@ We have created ou own widget at
 
 https://github.com/Varanasi-Software-Junction/firebasedemo/blob/main/lib/VsjTwo.dart
 
-10.
+10.Firebase Auth The file is at https://github.com/Varanasi-Software-Junction/firebasedemo/blob/1cd1e9096a5ba8092ddccac9598d3de53bebd9a9/lib/main.dart.
+dynamic _auth;
+dynamic result= await _auth.createUserWithEmailAndPassword(email: username, password: password);
+                      status=result.toString();
+                      print(status);
+
+
 
 
 
