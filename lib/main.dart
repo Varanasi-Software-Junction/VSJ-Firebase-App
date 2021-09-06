@@ -8,12 +8,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   //while(true)
-    {
- try {
-   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp();
- }
- catch(e) {}
+  {
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
+    } catch (e) {}
   }
   runApp(FirebaseDemo());
 }
@@ -26,7 +25,7 @@ class FirebaseDemo extends StatefulWidget {
 
 class _FirebaseDemoState extends State<FirebaseDemo> {
   String username = "", chatmessage = "", status = "Messages";
-  TextEditingController textcontroller=TextEditingController();
+  TextEditingController textcontroller = TextEditingController();
 
   @override
   void initState() {
@@ -48,6 +47,33 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
 
   _FirebaseDemoState() {}
   String firebasedata = "data";
+
+
+  //*****************************************************************************
+  void deleteMessages(String name) async {
+    dynamic result =
+    await FirebaseDemo.firestoredb.collection("messages").get();
+    QuerySnapshot messages = result;
+    print(messages);
+    firebasedata = "";
+    for (var message in messages.docs) {
+      print(message.data());
+
+      firebasedata = firebasedata + message.data().toString() + "\n";
+      print(message.get("chatmessage"));
+      print(message.get("messagefrom"));
+      String msgfrom=message.get("messagefrom").toString();
+      if(msgfrom==name)
+      FirebaseDemo.firestoredb.collection("messages").doc(message.id).delete();
+
+    }
+    print(firebasedata);
+    setState(() {});
+  }
+
+  //*****************************************************************************
+
+  //*****************************************************************************
   void getMessages() async {
     dynamic result =
         await FirebaseDemo.firestoredb.collection("messages").get();
@@ -56,6 +82,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
     firebasedata = "";
     for (var message in messages.docs) {
       print(message.data());
+
       firebasedata = firebasedata + message.data().toString() + "\n";
       print(message.get("chatmessage"));
       print(message.get("messagefrom"));
@@ -63,6 +90,11 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
     print(firebasedata);
     setState(() {});
   }
+
+  //*****************************************************************************
+
+
+  //*****************************************************************************
 
   void getMessagesStream() async {
     print("Streams");
@@ -76,6 +108,8 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
     ms.forEach((element) {
       for (var value in element.docs) {
         print(value.data());
+
+        //await element.docs.removeAt(index);
         firebasedata = firebasedata + value.data().toString() + "\n";
         print(value.get("chatmessage"));
         print(value.get("messagefrom"));
@@ -97,11 +131,12 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: ListView(
-
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseDemo.firestoredb
-                    .collection("messages").where("messagefrom", isEqualTo: "champak").orderBy("time")
+                    .collection("messages")
+                    .where("messagefrom", isEqualTo: "champak")
+                    .orderBy("time")
                     //.collection("messages").where("messagefrom", isEqualTo: "champak")
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -114,8 +149,8 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                         final sender = message.get("messagefrom");
                         final messagetextfield = VsjTwo(
                           messagetext.toString(),
-                              sender.toString(),
-                          );
+                          sender.toString(),
+                        );
                         lst.add(messagetextfield);
                         lst.add(SizedBox(
                           height: 10,
@@ -133,7 +168,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                     }
                   } catch (e) {
                     List<Text> lst = [];
-                    lst.add(Text("Erromr" + e.toString()));
+                    lst.add(Text("Error" + e.toString()));
                     return Column(
                       children: lst,
                     );
@@ -144,7 +179,6 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
                   decoration: VsjTwo.myInputDecoration(),
-
                   textAlign: TextAlign.center,
                   onChanged: (value) {
                     username = value;
@@ -155,27 +189,31 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
-controller:textcontroller,
+                  controller: textcontroller,
                   textAlign: TextAlign.center,
-decoration: VsjTwo.myInputDecoration(),
+                  decoration: VsjTwo.myInputDecoration(),
                   onChanged: (value) {
                     chatmessage = value;
                     print(chatmessage);
                   },
                 ),
               ),
-
-ElevatedButton(onPressed: ()async{
-  await     FirebaseDemo.firestoredb.collection("messages").add(
-      {
-        "chatmessage":chatmessage,
-        "messagefrom":username,
-        "time":DateTime.now().millisecondsSinceEpoch,
-      });
-  textcontroller.clear();
-
-}, child: Text("Send"))
-
+              ElevatedButton(
+                  onPressed: () async {
+                    await FirebaseDemo.firestoredb.collection("messages").add({
+                      "chatmessage": chatmessage,
+                      "messagefrom": username,
+                      "time": DateTime.now().millisecondsSinceEpoch,
+                    });
+                    textcontroller.clear();
+                  },
+                  child: Text("Send")),
+              ElevatedButton(
+                  onPressed: () async {
+                    int index = 0;
+                    await deleteMessages("champak");
+                  },
+                  child: Text("Delete")),
             ],
           ),
         ),
