@@ -1,10 +1,11 @@
 import 'dart:convert';
-
+import 'vsjgooglesignin.dart';
 import 'package:firebasedemo/VsjTwo.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   //while(true)
@@ -48,11 +49,10 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
   _FirebaseDemoState() {}
   String firebasedata = "data";
 
-
   //*****************************************************************************
   void deleteMessages(String name) async {
     dynamic result =
-    await FirebaseDemo.firestoredb.collection("messages").get();
+        await FirebaseDemo.firestoredb.collection("messages").get();
     QuerySnapshot messages = result;
     print(messages);
     firebasedata = "";
@@ -62,10 +62,12 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
       firebasedata = firebasedata + message.data().toString() + "\n";
       print(message.get("chatmessage"));
       print(message.get("messagefrom"));
-      String msgfrom=message.get("messagefrom").toString();
-      if(msgfrom==name)
-      FirebaseDemo.firestoredb.collection("messages").doc(message.id).delete();
-
+      String msgfrom = message.get("messagefrom").toString();
+      if (msgfrom == name)
+        FirebaseDemo.firestoredb
+            .collection("messages")
+            .doc(message.id)
+            .delete();
     }
     print(firebasedata);
     setState(() {});
@@ -93,7 +95,6 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
 
   //*****************************************************************************
 
-
   //*****************************************************************************
 
   void getMessagesStream() async {
@@ -118,13 +119,15 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
     print(firebasedata);
   }
 
+  String loginfo = "Varanasi Software Junction";
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.tealAccent,
         appBar: AppBar(
-          title: Text("Firebase Chat"),
+          title: Text(loginfo),
           backgroundColor: Colors.teal,
           centerTitle: true,
         ),
@@ -214,6 +217,44 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                     await deleteMessages("champak");
                   },
                   child: Text("Delete")),
+              ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      print("One");
+                      await VsjGoogleSignIn.doSignIn();
+
+                      print("Two");
+                      User usern = await VsjGoogleSignIn.getUser();
+                      print("Three");
+                      loginfo = usern.displayName;
+                      setState(() {
+                        print("State 4");
+                      });
+                    } catch (ex) {
+                      print(ex);
+                      loginfo = ex.toString();
+                      setState(() {});
+                    }
+                  },
+                  child: Text("Google Login")),
+              ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      print("Logout");
+                      await VsjGoogleSignIn.doSignOut();
+                      User usern = await VsjGoogleSignIn.getUser();
+
+                      if (usern == null) {
+                        loginfo = "Logged out";
+                        setState(() {});
+                      }
+                    } catch (ex) {
+                      print(ex);
+                      loginfo = ex.toString();
+                      setState(() {});
+                    }
+                  },
+                  child: Text("Google Logout")),
             ],
           ),
         ),
