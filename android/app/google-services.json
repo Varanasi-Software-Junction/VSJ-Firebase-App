@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "433961195599-0urutp8bvfp5tgu369pdul65g9v2mpre.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.varanasisoftwarejunction.cloud.firebasedemo",
+            "certificate_hash": "2a4d12c7046204d5fe9c7b13bce07038504b20e2"
+          }
+        },
+        {
           "client_id": "433961195599-qip096jle0f62sj5ev5jl656cj57phgk.apps.googleusercontent.com",
           "client_type": 3
         }
