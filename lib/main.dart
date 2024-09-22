@@ -19,7 +19,7 @@ void main() async {
 }
 
 class FirebaseDemo extends StatefulWidget {
-  static FirebaseFirestore firestoredb; //=FirebaseFirestore.instance;
+  static FirebaseFirestore? firestoredb; //=FirebaseFirestore.instance;
   @override
   _FirebaseDemoState createState() => _FirebaseDemoState();
 }
@@ -50,9 +50,9 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
   String firebasedata = "data";
 
   //*****************************************************************************
-  void deleteMessages(String name) async {
+  Future<bool> deleteMessages(String name) async {
     dynamic result =
-        await FirebaseDemo.firestoredb.collection("messages").get();
+        await FirebaseDemo.firestoredb?.collection("messages").get();
     QuerySnapshot messages = result;
     print(messages);
     firebasedata = "";
@@ -65,12 +65,13 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
       String msgfrom = message.get("messagefrom").toString();
       if (msgfrom == name)
         FirebaseDemo.firestoredb
-            .collection("messages")
+            ?.collection("messages")
             .doc(message.id)
             .delete();
     }
     print(firebasedata);
     setState(() {});
+    return true;
   }
 
   //*****************************************************************************
@@ -78,7 +79,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
   //*****************************************************************************
   void getMessages() async {
     dynamic result =
-        await FirebaseDemo.firestoredb.collection("messages").get();
+        await FirebaseDemo.firestoredb?.collection("messages").get();
     QuerySnapshot messages = result;
     print(messages);
     firebasedata = "";
@@ -101,7 +102,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
     print("Streams");
 
     dynamic result =
-        await FirebaseDemo.firestoredb.collection("messages").snapshots();
+        await FirebaseDemo.firestoredb?.collection("messages").snapshots();
     print(result.runtimeType);
     Stream<QuerySnapshot> ms = result;
     setState(() {});
@@ -119,7 +120,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
     print(firebasedata);
   }
 
-  String loginfo = "Varanasi Software Junction";
+  String? loginfo = "Varanasi Software Junction";
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +128,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
       home: Scaffold(
         backgroundColor: Colors.tealAccent,
         appBar: AppBar(
-          title: Text(loginfo),
+          title: Text(loginfo!),
           backgroundColor: Colors.teal,
           centerTitle: true,
         ),
@@ -137,7 +138,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
             children: <Widget>[
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseDemo.firestoredb
-                    .collection("messages")
+                    ?.collection("messages")
                     .where("messagefrom", isEqualTo: "champak")
                     .orderBy("time")
                     //.collection("messages").where("messagefrom", isEqualTo: "champak")
@@ -145,9 +146,9 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                 builder: (context, snapshot) {
                   try {
                     if (snapshot.hasData) {
-                      final messages = snapshot.data.docs;
+                      final messages = snapshot.data?.docs;
                       List<Widget> lst = [];
-                      for (var message in messages) {
+                      for (var message in messages!) {
                         final messagetext = message.get("chatmessage");
                         final sender = message.get("messagefrom");
                         final messagetextfield = VsjTwo(
@@ -203,7 +204,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    await FirebaseDemo.firestoredb.collection("messages").add({
+                    await FirebaseDemo.firestoredb?.collection("messages").add({
                       "chatmessage": chatmessage,
                       "messagefrom": username,
                       "time": DateTime.now().millisecondsSinceEpoch,
@@ -224,9 +225,9 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                       await VsjGoogleSignIn.doSignIn();
 
                       print("Two");
-                      User usern = await VsjGoogleSignIn.getUser();
+                      User? usern = await VsjGoogleSignIn.getUser();
                       print("Three");
-                      loginfo = usern.displayName;
+                      loginfo = usern?.displayName!!!!;
                       setState(() {
                         print("State 4");
                       });
@@ -242,7 +243,7 @@ class _FirebaseDemoState extends State<FirebaseDemo> {
                     try {
                       print("Logout");
                       await VsjGoogleSignIn.doSignOut();
-                      User usern = await VsjGoogleSignIn.getUser();
+                      User? usern = await VsjGoogleSignIn.getUser();
 
                       if (usern == null) {
                         loginfo = "Logged out";
